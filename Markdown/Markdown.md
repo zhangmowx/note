@@ -69,7 +69,9 @@
 欢迎来到[gitHub](https://github.com/ "github是一个非常棒的网站")  
 欢迎来到[gitHub](https://github.com/)
 
-  *参考式
+
+  * 参考式
+
   ```
    [链接文字][链接标记]    [链接标记]:链接地址 "链接标题"
    参考式链接分2部分，具体参考Demo，这个模式比较适合链接有多次引用的文档，可以重复使用链接
@@ -78,8 +80,8 @@
    
    [1]:www.baidu.com "百度"
    [2]:www.google.com "谷歌"
-   
   ```
+  
 演示效果：
 
 遇到问题，我喜欢通过[百度][1]搜索，有时候也会用[谷歌][2]搜索
@@ -87,15 +89,19 @@
 [1]:www.baidu.com "百度"
 [2]:www.google.com "谷歌"
 
-  
+
   * 自动连接
+    
     ```
     用<>将地址包含起来。适用邮箱等地址 github应该是不支持这种语法。
+    
     <https://github.com>
-    <zhangmowx@163.com>
-   ```
+
+    ```
+   
 演示效果:
 
 <https://github.com>
 
 
+ 
