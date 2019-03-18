@@ -219,5 +219,21 @@ ___
    ### 行内式
    ```
     ![图片Alt](图片地址 "图片title")
+    ![头像](https://avatars3.githubusercontent.com/u/29033474?s=40&v=4,"头像")
    ```
+ ![头像](https://avatars3.githubusercontent.com/u/29033474?s=40&v=4,"头像")
+   ### 参数式
+   同连接参数式，可参考连接参数式
+  
+  ## 表格
+  ```
+   H1|H2|H3
+   -|-|-
+   A|B|C
+   D|E|F 
+  ```
+   H1|H2|H3
+   -|-|-
+   A|B|C
+   D|E|F 
  
