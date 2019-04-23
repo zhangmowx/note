@@ -56,3 +56,28 @@ public class Swagger2 {
 }
 
 ```
+## 项目启动类加上Swagger2注解
+```
+package com.zm.oa;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+@SpringBootApplication
+@EnableSwagger2
+public class OaApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OaApplication.class, args);
+	}
+
+}
+```
+## Swagger2 API文档
+1. @API
+```
+@Api(value="员工Controller类",tags= {"员工Controller类Tag1","员工Controller类Tag1"})
+
+```
