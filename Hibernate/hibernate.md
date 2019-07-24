@@ -107,7 +107,7 @@
  
  ## 8. get和load区别
  ### 1. 返回方式
-load方式检索不到的话会抛出org.hibernate.ObjectNotFoundException异常；
+load方式检索不到的话会抛出org.hibernate.ObjectNotFoundException异常；  
 get方法检索不到的话会返回null；
  ### 2. 检索执行机制
 get方法先到一级缓存，然后二级，最后db查找。  
@@ -117,6 +117,88 @@ load方法首先一级缓存中是否有缓存，如果有则直接返回，如�
 saveorupdate()如果传入的对象在数据库中有就做update操作，如果没有就做save操作。  
 save()在数据库中生成一条记录，如果数据库中有，会报错说有重复的记录。  
 update()就是更新数据库中的记录  
+
+## 10. Hibernate的查询方式有几种
+* 对象导航查询(objectcomposition)
+* HQL查询  
+* QBC 查询  
+* SQLQuery本地SQL查询  
+
+## 11. Hibernate缓存机制
+### 一级缓存：
+Hibenate中一级缓存，也叫做session的缓存，它可以在session范围内减少数据库的访问次数！ 只在session范围有效！ Session关闭，一级缓存失效！
+只要是持久化对象状态的，都受Session管理，也就是说，都会在Session缓存中！
+Session的缓存由hibernate维护，用户不能操作缓存内容； 如果想操作缓存内容，必须通过hibernate提供的evit/clear方法操作。
+
+### 二级缓存：
+二级缓存是基于应用程序的缓存，所有的Session都可以使用
+Hibernate提供的二级缓存有默认的实现，且是一种可插配的缓存框架！如果用户想用二级缓存，只需要在hibernate.cfg.xml中配置即可； 不想用，直接移除，不影响代码。
+如果用户觉得hibernate提供的框架框架不好用，自己可以换其他的缓存框架或自己实现缓存框架都可以。
+Hibernate二级缓存：存储的是常用的类
+
+## 12. hibernate里面的sorted collection 和ordered collection有什么区别
+### sorted collection
+是在内存中通过Java比较器进行排序的
+### ordered collection
+是在数据库中通过order by进行排序的
+对于比较大的数据集，为了避免在内存中对它们进行排序而出现 Java中的OutOfMemoryError，最好使用ordered collection
+
+## 13. 谈谈Hibernate中inverse的作用
+inverse属性默认是false,就是说关系的两端都来维护关系。
+
+比如Student和Teacher是多对多关系，用一个中间表TeacherStudent维护。Gp)
+如果Student这边inverse=”true”, 那么关系由另一端Teacher维护，就是说当插入Student时，不会操作TeacherStudent表（中间表）。只有Teacher插入或删除时才会触发对中间表的操作。所以两边都inverse=”true”是不对的，会导致任何操作都不触发对中间表的影响；当两边都inverse=”false”或默认时，会导致在中间表中插入两次关系。
+如果表之间的关联关系是“一对多”的话，那么inverse只能在“一”的一方来配置！
+
+## 14. 主键生成 策略有哪些
+identity 自增长(mysql,db2)
+sequence 自增长(序列)， oracle中自增长是以序列方法实现**
+native 自增长【会根据底层数据库自增长的方式选择identity或sequence】
+  如果是mysql数据库, 采用的自增长方式是identity
+  如果是oracle数据库， 使用sequence序列的方式实现自增长
+increment 自增长(会有并发访问的问题，一般在服务器集群环境使用会存在问题。)
+  指定主键生成策略为手动指定主键的值
+assigned
+  指定主键生成策略为UUID生成的值
+uuid
+foreign(外键的方式)
+
+## 15. 简述hibernate中getCurrentSession和openSession区别
+1. getCurrentSession会绑定当前线程，而openSession不会，因为我们把hibernate交给我们的spring来管理之后，我们是有事务配置，这个有事务的线程就会绑定当前的工厂里面的每一个session，而openSession是创建一个新session。
+2. getCurrentSession事务是有spring来控制的，而openSession需要我们手动开启和手动提交事务，
+3. getCurrentSession是不需要我们手动关闭的，因为工厂会自己管理，而openSession需要我们手动关闭。
+4. 而getCurrentSession需要我们手动设置绑定事务的机制，有三种设置方式，jdbc本地的Thread、JTA、第三种是spring提供的事务管理机制org.springframework.orm.hibernate4.SpringSessionContext，而且srping默认使用该种事务管理机制
+
+## 16. 为什么在Hibernate的实体类中要提供一个无参数的构造器这一点非常重要？
+每个Hibernate实体类必须包含一个 无参数的构造器, 这是因为Hibernate框架要使用Reflection API，通过调用Class.newInstance()来创建这些实体类的实例。如果在实体类中找不到无参数的构造器，这个方法就会抛出一个InstantiationException异常。
+
+## 17. 可不可以将Hibernate的实体类定义为final类?
+你可以将Hibernate的实体类定义为final类，但这种做法并不好。因为Hibernate会使用代理模式在延迟关联的情况下提高性能，如果你把实体类定义成final类之后，因为 Java不允许对final类进行扩展，所以Hibernate就无法再使用代理了， 如此一来就限制了使用可以提升性能的手段。
+
+
+## 18. persist和save的区别
+persist不保证立即执行，可能要等到flush；  
+persist不更新缓存；  
+save, 把一个瞬态的实例持久化标识符，及时的产生,它要返回标识符，所以它会立即执行Sql insert  
+使用 save() 方法保存持久化对象时，该方法返回该持久化对象的标识属性值(即对应记录的主键值)；  
+使用 persist() 方法来保存持久化对象时，该方法没有任何返回值。  
+
+
+## 19. JDBC hibernate 和 mybatis 的区别
+### jdbc:手动
+手动写sql
+delete、insert、update要将对象的值一个一个取出传到sql中,不能直接传入一个对象。
+select:返回的是一个resultset，要从ResultSet中一行一行、一个字段一个字段的取出，然后封装到一个对象中，不直接返回一个对象。
+
+### mybatis的特点:半自动化
+sql要手动写
+delete、insert、update:直接传入一个对象
+select:直接返回一个对象
+
+### hibernate:全自动
+不写sql,自动封装
+delete、insert、update:直接传入一个对象
+select:直接返回一个对象
 
 
 https://wenku.baidu.com/view/b268a128af45b307e871970f.html?sxts=1563933439062
