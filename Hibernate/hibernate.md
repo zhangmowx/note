@@ -200,5 +200,19 @@ select:直接返回一个对象
 delete、insert、update:直接传入一个对象
 select:直接返回一个对象
 
+## 20. hibernate的sessionFactory和session
+SessionFactory接口负责初始化Hibernate。使用工厂模式创建session对象。可以通过Configuration实例构建SessionFactory。SessionFactory保存了对应当前数据库配置的所有映射关系，同时也负责维护当前的二级数据缓存和Statement Pool。SessionFactory是线程安全的。
+Session是Hibernate持久化操作的基础，提供了众多持久化方法，如save、update、delete等。通过这些方法，透明地完成对象的增加、删除、修改、查找等操作。session是线程不安全的，同时也管理一级缓存。
 
+## 21. hibernate优化
+Ø 数据库设计调整
+Ø HQL优化
+Ø API的正确使用(如根据不同的业务类型选用不同的集合及查询API)
+Ø 主配置参数(日志，查询缓存，fetch_size, batch_size等)
+Ø 映射文件优化(ID生成策略，二级缓存，延迟加载，关联优化)
+Ø 一级缓存的管理
+Ø 针对二级缓存，还有许多特有的策略
+
+## 参考文档：
+https://www.cnblogs.com/Java3y/p/8535459.html
 https://wenku.baidu.com/view/b268a128af45b307e871970f.html?sxts=1563933439062
