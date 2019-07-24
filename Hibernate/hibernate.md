@@ -59,12 +59,59 @@
 缺点： 应用程序如果希望访问游离状态代理类实例，必须保证他在持久化状态时已经被初始化；
 延迟加载：lazy=true；
 
-###迫切左外连接检索：
+### 迫切左外连接检索：
 优点： 1对应用程序完全透明，不管对象处于持久化状态，还是游离状态，应用程序都可以方便地冲一个对象导航到与它关联的对象。2使用了外连接，select语句数目少；
 缺点： 1 可能会加载应用程序不需要访问的对象，白白浪费许多内存空间；2复杂的数据库表连接也会影响检索性能；
 预先抓取： fetch=“join”；
 
-
+## 7.Hibernate检查策略
+ ### 1. 类级别检索策略
+   #### 立即检索  get
+    session.get(xxx) 直接发送SQL，到数据库查询，返回真实对象
+   #### 延迟检索  load
+    session.load(xxx) 不发送sql，返回一个代理对象，当需要使用该对象时，才发送sql。
+    可以通过在配置文件<class>标签中配置lazy="false"属性，设置不延迟检索
+ ### 2. 关联级别检索策略
+ ```
+ 在<set>标签上或者在<many-to-one>上设置两个属性值来控制其检索策略，  fetch、lazy
+　fetch：代表检索时的语句的方式，比如左外连接等。
+   fetch：join、select 、subselect　　
+  lazy：是否延迟加载。
+   lazy：true、false、extra
+   
+   一对多或多对多时
+   <set fetch=""，lazy="">
+   fetch = join时，采取迫切左外连接查询　　
+       lazy不管取什么值都失效，就是取默认值为false。
+   fetch=select时，生成多条简单sql查询语句
+       lazy=false：立即检索
+       lazy=true：延迟检索
+       lazy=extra：加强延迟检索，非常懒惰，比延迟检索更加延迟
+   fetch=subselect时，生成子查询
+       lazy=false:立即检索
+       lazy=true；延迟检索
+       lazy=extra：加强延迟检索，非常懒惰，比延迟检索更加延迟
+   多对一或一对一时
+  fetch可以取值为：join，select
+  lazy：false，proxy，no-proxy
+  当fetch=join，lazy会失效，生成的sql是迫切左外连接
+  如果我们使用query时，hql是我们自己指定的，那么fetch=join是无效的，不会生成迫切左外连接，这时lazy重新启用
+  当fetch=select，lazy不失效，生成简单sql语句，
+  lazy=false：立即检索
+  lazy=proxy：这时关联对象采用什么样的检索策略取决于关联对象的类级别检索策略.就是说参考<class>上的lazy的值
+```
+ ### 3. 批量检索
+  解决n+1的问题，方案有2中
+  1. 一的一方<set>中设置batch-size='x'
+  2. 多的一方<class>中设置batch-size='x'
+ 
+ ## 8. get和load区别
+ ### 1. 返回方式
+     load方式检索不到的话会抛出org.hibernate.ObjectNotFoundException异常；
+     get方法检索不到的话会返回null；
+ ### 2. 检索执行机制
+     get方法先到一级缓存，然后二级，最后db查找。
+     load方法首先一级缓存中是否有缓存，如果有则直接返回，如果没有则去查找二级缓存，如果有则返回，如果没有则判断是否是lazy，若不是lazy，直接访问数据  库检索，查到记录返回（并且同时在二级缓存中存放查到的数据方便下次使用，若再下次使用时在二级缓存命中，就是查到数据，则有可能将数据放到一级缓存中。），查不到抛出异常。 若是lazy，则返回代理对象，而不到数据库中查找，除非使用此对象时，才到数据库中查找。
 
 
 https://wenku.baidu.com/view/b268a128af45b307e871970f.html?sxts=1563933439062
