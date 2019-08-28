@@ -3,3 +3,12 @@
 spring 面试题
 https://blog.csdn.net/a745233700/article/details/80959716
 https://www.cnblogs.com/whtydn/p/5128097.html
+
+
+
+Spring Session原理
+1.引入spring session相关jar包（spring-session-data-redis）
+2.注入Spring Session运行需要的Bean（RedisHttpSessionConfiguration）
+3.web.xml添加filter（DelegatingFilterProxy） 放在第一个 不确定其他filter是否有用到session信息
+4.RedisHttpSessionConfiguration时会将SessionRepositoryFilter注入，这个就是Spring Session实现session共享的Filter
+Spring Session通过创建一个Filter，然后在Filter中对request和response进行包装，在包装的request中重写session保存和获取的操作，完成了将session保存到redis的操作，实现了session共享。
