@@ -10,7 +10,23 @@
 7.Linux，Nginx，Jenkins，Maven，Docker，Git，SVN，IDEA
 8.JVM，数据结构和算法
 
+spring 2个月
+mybatis    0.5月
+Hibernate 1.5月
+springboot 2月
+springcloud 2月
+dubbo+zookeeper 1月
+项目 3月
 
+OA
+	OA
+	OAPermission
+	OAweb
+	OAadmin
+	OAactiviti
+	OAscheduler
+
+SpirngCloud + springboot  + mybatis +activiti + VUE 
 
 https://wenku.baidu.com/view/e328da3d28ea81c759f57891.html?from=search
 https://wenku.baidu.com/view/f431026682c4bb4cf7ec4afe04a1b0717fd5b3a4.html?rec_flag=default&sxts=1562316915140
